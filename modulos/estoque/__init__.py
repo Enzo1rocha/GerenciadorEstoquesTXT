@@ -1,33 +1,45 @@
-def adicionar_Cliente_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
+def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
         a = open(arquivoComNomes, 'rt')
+        b = open(arquivoEndereço, 'r+')
     except:
         print("Erro ao ler o arquivo")
     else:
+        lista_Nomes = []
         for linha in a:
             dado = linha.split(';')
             dado[0] = dado[0].replace('\n', '')
+            lista_Nomes.append(dado[0])
+
+
+        lista_Nomes_Estoque = []
+        for linhaEstoque in b:
+            dadosEstoque = linhaEstoque.split(':')
+            lista_Nomes_Estoque.append(dadosEstoque[0])
+            
+        try:
+            arq = open(arquivoEndereço, 'at')
+        except:
+            print("Ocorreu Algum Erro")
+        else:
             try:
-                arq = open(arquivoEndereço, 'at')
+                produto = 'None'
+                quantidade = 0
+                for i in lista_Nomes:
+                    if i not in lista_Nomes_Estoque:
+                        arq.write(f'{i}:{produto}:{quantidade}\n')
+                        print(f'{"="*40}')
+                        print(F"Estoque de {i}\nProduto: {produto}\nQuantidade: {quantidade}\nFOI ADICIONADO COM SUCESSO")
             except:
-                print("Ocorreu Algum Erro")
-                break
-            else:
-                try:
-                    produto = 'None'
-                    quantidade = 0
-                    arq.write(f'{dado[0]}:{produto}:{quantidade}\n')
-                except:
-                    print("Erro na hora de adiconar, produto quantidade e nome")
-                else:
-                    print(f'Estode de {dado[0]} \nProduto: {produto}\nQuantidade: {quantidade}\nFOI ADICIONADO COM SUCESSO')
+                print("Erro na hora de adiconar, produto quantidade e nome")
             finally:
                 arq.close()
     finally:
         a.close()
+        b.close()
 
 
-def alterar_Dados_Cliente(arquivoEstoque='.txt'):
+def alterar_Dados_Produtos(arquivoEstoque='.txt'):
     try:
         a = open(arquivoEstoque, 'rt')
     except:
