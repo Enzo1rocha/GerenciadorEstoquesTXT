@@ -1,3 +1,4 @@
 Cimento;23.0;123
 Pedra;10.0;203
 Areia;123.0;3
+Tijolo;1.12;43456

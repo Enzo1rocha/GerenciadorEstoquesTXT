@@ -1,9 +1,12 @@
+from uuid import uuid4
+
+
 def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
         a = open(arquivoComNomes, 'rt')
         b = open(arquivoEndereço, 'r+')
     except:
-        print("Erro ao ler o arquivo")
+        print("Erro ao ler os arquivos")
     else:
         lista_produtos = []
         for linha in a:
@@ -15,7 +18,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
         lista_Nomes_Estoque = []
         for linhaEstoque in b:
             dadosEstoque = linhaEstoque.split(':')
-            lista_Nomes_Estoque.append(dadosEstoque[0])
+            lista_Nomes_Estoque.append(dadosEstoque[1])
             
         try:
             arq = open(arquivoEndereço, 'at')
@@ -26,7 +29,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
                 i = 0
                 while i < len(lista_produtos):
                     if lista_produtos[i][0] not in lista_Nomes_Estoque:
-                        arq.write(f'{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}\n')
+                        arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}\n')
                         print(f'{"="*40}')
                         print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
                     i += 1
