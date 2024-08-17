@@ -1,4 +1,3 @@
-Madeira:None:0
-Pedra:None:0
-Agua:None:0
-Cimento:None:0
+Cimento:23.00:123
+Pedra:10.00:203
+Areia:123.00:3

@@ -5,11 +5,11 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     except:
         print("Erro ao ler o arquivo")
     else:
-        lista_Nomes = []
+        lista_produtos = []
         for linha in a:
             dado = linha.split(';')
-            dado[0] = dado[0].replace('\n', '')
-            lista_Nomes.append(dado[0])
+            dado[2] = dado[2].replace('\n', '')
+            lista_produtos.append(dado)
 
 
         lista_Nomes_Estoque = []
@@ -23,15 +23,13 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
             print("Ocorreu Algum Erro")
         else:
             try:
-                produto = 'None'
-                quantidade = 0
-                for i in lista_Nomes:
-                    if i not in lista_Nomes_Estoque:
-                        arq.write(f'{i}:{produto}:{quantidade}\n')
+                i = 0
+                while i < len(lista_produtos):
+                    if lista_produtos[i][0] not in lista_Nomes_Estoque:
+                        arq.write(f'{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}\n')
                         print(f'{"="*40}')
-                        print(F"Estoque de {i}\nProduto: {produto}\nQuantidade: {quantidade}\nFOI ADICIONADO COM SUCESSO")
-            except:
-                print("Erro na hora de adiconar, produto quantidade e nome")
+                        print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
+                    i += 1
             finally:
                 arq.close()
     finally:

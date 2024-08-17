@@ -1,4 +1,4 @@
-def adicionarProdutoNoArquivo(arquivo=".txt", nomedocliente="Desconhecido"):
+def adicionarProdutoNoArquivo(arquivo=".txt", nomedoproduto="Desconhecido", precodoproduto=0,quantidadedoproduto=0):
     try:
         a = open(arquivo, 'r+')
     except:
@@ -6,26 +6,32 @@ def adicionarProdutoNoArquivo(arquivo=".txt", nomedocliente="Desconhecido"):
     else:
             lista_Produtos_no_Arquivo = []
             for linha in a:
-                clientes = linha.split(';')
-                clientes[0].replace("\n","")
-                lista_Produtos_no_Arquivo.append(clientes[0])
+                produtos = linha.split(';')
+                produtos[0].replace("\n","")
+                lista_Produtos_no_Arquivo.append(produtos[0])
 
-            if nomedocliente not in lista_Produtos_no_Arquivo:
-                a.write(f'{nomedocliente};\n')
-                print(f"{nomedocliente} Adicionado Com Sucesso")
+            if nomedoproduto not in lista_Produtos_no_Arquivo:
+                a.write(f'{nomedoproduto};{precodoproduto};{quantidadedoproduto}\n')
+                print(f"{nomedoproduto} Adicionado Com Sucesso")
     finally:
         a.close()
 
 
 def adicionar_Manualmente_Produtos_em_Lista(arquivoTXT=".txt"):
-        lista = []
+        lista_nomes = []
+        lista_precos = []
+        lista_estoque = []
         while True:
             nome = str(input("Digite o Nome do Produto: ")).capitalize()
-            if nome in lista:
+            preco = str(float(input("Preço do Produto: R$")))
+            estoque = str(int(input("Quantidade Disponivel: ")))
+            if nome in lista_nomes:
                 print("Este Produto ja possui um estoque")
                 continue
             else:
-                lista.append(nome)
+                lista_nomes.append(nome)
+                lista_precos.append(preco)
+                lista_estoque.append(estoque)
                 while True:
                     continuar = str(input("Continuar? [S/N]")).upper()
                     if continuar in ["S","N"]:
@@ -33,7 +39,9 @@ def adicionar_Manualmente_Produtos_em_Lista(arquivoTXT=".txt"):
                 if continuar == 'S':
                     continue
                 else:
-                    for i in lista:
-                        adicionarProdutoNoArquivo(arquivoTXT, i)
+                    i = 0
+                    while i < len(lista_nomes):
+                        adicionarProdutoNoArquivo(arquivoTXT, lista_nomes[i], lista_precos[i], lista_estoque[i])
+                        i+=1
                     break
         
