@@ -1,9 +1,13 @@
+from math import prod
 from modulos import arquivo
 from modulos import produtos
 from modulos import estoque
+from modulos.proInterface import limparTerminal
 
 arquivos = ["produtos.txt", "estoque.txt", "logs.txt"]
 for i in arquivos:
     arquivo.arqExiste(i)
 
-estoque.alterar_Dados_Produtos(arquivos[1],"41d93a48-8b4e-4e1c-8d8b-618e147a0e3d", 2)
+limparTerminal()
+produtos.adicionar_Manualmente_Produtos_em_Lista(arquivos[0])
+estoque.adicionar_Produtos_Estoque(arquivos[0], arquivos[1])

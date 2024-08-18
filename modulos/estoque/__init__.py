@@ -1,10 +1,10 @@
-from itertools import count
-from os import error
-from sys import exception
-from time import process_time_ns
+from re import T
 from uuid import uuid4
 from modulos import *
+from modulos import proInterface
 from modulos.entradaDeDados import float_input, int_input
+from modulos.proInterface import limparTerminal
+from time import sleep
 
 def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
@@ -21,10 +21,15 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
 
 
         lista_Nomes_Estoque = []
-        for linhaEstoque in b:
-            dadosEstoque = linhaEstoque.split(':')
-            lista_Nomes_Estoque.append(dadosEstoque[1])
-            
+        if b:
+            for linhaEstoque in b:
+                print(linhaEstoque)
+                if ':' in linhaEstoque:
+                    dadosEstoque = linhaEstoque.split(':')
+                    if len(dadosEstoque) > 1:
+                        lista_Nomes_Estoque.append(dadosEstoque[1])
+        else:
+            print(f"{arquivoEndereço} esta vazio")
         try:
             arq = open(arquivoEndereço, 'at')
         except:
@@ -34,15 +39,36 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
                 i = 0
                 while i < len(lista_produtos):
                     if lista_produtos[i][0] not in lista_Nomes_Estoque:
-                        arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}\n')
-                        print(f'{"="*40}')
-                        print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
+                        print("====== QUANTIDADES DISPONIVEIS, ARMAZENADA E COMPROMETIDA ======")
+                        while True:
+                            quantidade_Disponivel = str(int_input(f"Quantidade disponivel do produto {lista_produtos[i][0]}: "))
+                            quantidade_Armazenada = str(int_input(f"Quantidade Armazenada do produto {lista_produtos[i][0]}: "))
+                            quantidade_Comprometida = str(int_input(f"Quantidade Comprometida do Produto {lista_produtos[i][0]}: "))
+
+                            if int(quantidade_Disponivel) <= int(lista_produtos[i][2]) and int(quantidade_Armazenada) <= int(lista_produtos[i][2]) and int(quantidade_Comprometida) <= int(lista_produtos[i][2]):
+
+                                print(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}\n')
+
+                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:')
+                                arq.write(f'{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}\n')
+
+                                print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
+
+                                limparTerminal()
+                                break
+                            else:
+                                print(f"Verifique se os dados batem com a quantidade total de estoque do produto {lista_produtos[i][0]} \nQuantidade total de estoque: {lista_produtos[i][2]}")
+                                sleep(1)
+                                continue
+                        
+                        #arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{quantidade_Disponivel}:{quantidade_Armazenada}:{quantidade_Comprometida}\n')
                     i += 1
+            except Exception as erroNaAdiçãoLista:
+                print(erroNaAdiçãoLista)        
             finally:
+                a.close()
+                b.close()
                 arq.close()
-    finally:
-        a.close()
-        b.close()
 
 
 def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração=1):
@@ -55,11 +81,12 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
             clientes_E_estoques = []
             for linha in a:
                 dados = linha.split(':')
-                dados[3] = dados[3].replace("\n","")
+                dados[6] = dados[6].replace("\n","")
                 clientes_E_estoques.append(dados)
             
             a.close()
-        except:
+        except Exception as erroCriaçãoLista:
+            print(erroCriaçãoLista)
             print("Erro na criação da lista")
         else:
             count_Loop_Produtos_In_clientes = 0
@@ -84,7 +111,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
 
                             while True:
-                                mudarNome = str(input(f"Confirmar Mudança do Nome do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]}? ")).upper()
+                                mudarNome = str(input(f"Confirmar Mudança do Nome do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]}? [S/N] ")).upper()
                                 if mudarNome in ["S","N"]:
                                     break
                             if mudarNome == "S":
@@ -106,7 +133,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
 
                             while True:
-                                mudarPreco = str(input(f"Confirmar Mudança do Preço do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? ")).upper()
+                                mudarPreco = str(input(f"Confirmar Mudança do Preço do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N] ")).upper()
                                 if mudarPreco in ["S","N"]:
                                     break
                             if mudarPreco == "S":
@@ -129,7 +156,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
 
                             while True:
-                                mudarEstoque = str(input(f"Confirmar Mudança do Estoque do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]}? ")).upper()
+                                mudarEstoque = str(input(f"Confirmar Mudança do Estoque do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]}?  [S/N] ")).upper()
                                 if mudarEstoque in ["S","N"]:
                                     break
                             if mudarEstoque == "S":
@@ -138,6 +165,73 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                             print("Erro Na Alteração de Estoque")
                             print(errorEstoque.__class__)
                             print(errorEstoque)
+                    case 4:
+                        try:
+                            def alterarEstoqueDisponivel():
+                                    novoEstoqueDisponivel = f'{int_input("Novo Estoque Disponivel: ", True)}'
+
+                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                                    print(f"Velho Estoque Dispnivel: {velhoEstoque}")
+
+
+                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueDisponivel
+
+
+                            while True:
+                                mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Disponivel do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]}? [S/N]")).upper()
+                                if mudarEstoqueDisponivel in ["S","N"]:
+                                    break
+                            if mudarEstoqueDisponivel == "S":
+                                alterarEstoqueDisponivel()
+                        except Exception as errorEstoque:
+                            print("Erro Na Alteração de Estoque")
+                            print(errorEstoque.__class__)
+                            print(errorEstoque)
+                    case 5:
+                        try:
+                            def alterarEstoqueArmazenada():
+                                    novoEstoqueArmazenado = f'{int_input("Novo Estoque Armazenado: ", True)}'
+
+                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                                    print(f"Velho Estoque Armazenado: {velhoEstoque}")
+
+
+                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueArmazenado
+
+
+                            while True:
+                                mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Armazenado do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
+                                if mudarEstoqueDisponivel in ["S","N"]:
+                                    break
+                            if mudarEstoqueDisponivel == "S":
+                                alterarEstoqueArmazenada()
+                        except Exception as errorEstoque:
+                            print("Erro Na Alteração de Estoque")
+                            print(errorEstoque.__class__)
+                            print(errorEstoque)
+                    case 6:
+                        try:
+                            def alterarEstoqueComprometido():
+                                    novoEstoqueComprometido = f'{int_input("Novo Estoque Comprometido: ", True)}'
+
+                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                                    print(f"Velho Estoque Comprometido: {velhoEstoque}")
+
+
+                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueComprometido
+
+
+                            while True:
+                                mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Armazenado do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]}? [S/N]")).upper()
+                                if mudarEstoqueDisponivel in ["S","N"]:
+                                    break
+                            if mudarEstoqueDisponivel == "S":
+                                alterarEstoqueComprometido()
+                        except Exception as errorEstoque:
+                            print("Erro Na Alteração de Estoque")
+                            print(errorEstoque.__class__)
+                            print(errorEstoque)
+
 
                     case _:
                         print("Erro!!!")

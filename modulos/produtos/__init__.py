@@ -1,4 +1,6 @@
+from time import sleep
 from modulos import entradaDeDados
+from modulos.proInterface import limparTerminal
 
 def adicionarProdutoNoArquivo(arquivo=".txt", nomedoproduto="Desconhecido", precodoproduto=0,quantidadedoproduto=0):
     try:
@@ -15,6 +17,7 @@ def adicionarProdutoNoArquivo(arquivo=".txt", nomedoproduto="Desconhecido", prec
             if nomedoproduto not in lista_Produtos_no_Arquivo:
                 a.write(f'{nomedoproduto};{precodoproduto};{quantidadedoproduto}\n')
                 print(f"{nomedoproduto} Adicionado Com Sucesso")
+                sleep(0.2)
     finally:
         a.close()
 
@@ -37,6 +40,8 @@ def adicionar_Manualmente_Produtos_em_Lista(arquivoTXT=".txt"):
                 while True:
                     continuar = str(input("Continuar? [S/N]")).upper()
                     if continuar in ["S","N"]:
+                        limparTerminal()
+                        sleep(0.5)
                         break
                 if continuar == 'S':
                     continue
