@@ -9,5 +9,4 @@ for i in arquivos:
     arquivo.arqExiste(i)
 
 limparTerminal()
-produtos.adicionar_Manualmente_Produtos_em_Lista(arquivos[0])
-estoque.adicionar_Produtos_Estoque(arquivos[0], arquivos[1])
+estoque.alterar_Dados_Produtos('estoque.txt', '4abf34c1-dd65-45c6-af3e-997ca67b6960', 2)

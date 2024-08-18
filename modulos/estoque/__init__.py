@@ -1,4 +1,5 @@
 from re import T
+import traceback
 from uuid import uuid4
 from modulos import *
 from modulos import proInterface
@@ -79,24 +80,26 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
     else:
         try:
             clientes_E_estoques = []
-            for linha in a:
-                dados = linha.split(':')
-                dados[6] = dados[6].replace("\n","")
-                clientes_E_estoques.append(dados)
-            
-            a.close()
+            if a:
+                for linha in a:
+                    if ":" in linha:
+                        dados = linha.split(":")
+                        dados[6] = dados[6].replace('\n','')
+                        clientes_E_estoques.append(dados)
+                    else:
+                        print("Não Foi Encontrado :")
+            else:
+                print(f"Arquivo {arquivoEstoque} está vazio")
         except Exception as erroCriaçãoLista:
             print(erroCriaçãoLista)
-            print("Erro na criação da lista")
         else:
-            count_Loop_Produtos_In_clientes = 0
+            print(clientes_E_estoques)
+            county = 0
             index_Produto_Que_Sera_Alterado = 0
-            while count_Loop_Produtos_In_clientes < len(clientes_E_estoques):
-                if IDproduto == clientes_E_estoques[count_Loop_Produtos_In_clientes][0]:
-                    index_Produto_Que_Sera_Alterado = clientes_E_estoques[count_Loop_Produtos_In_clientes]
-                count_Loop_Produtos_In_clientes += 1
-
-
+            while county < len(clientes_E_estoques):
+                if IDproduto == clientes_E_estoques[county][0]:
+                    index_Produto_Que_Sera_Alterado = county
+                county += 1
             try:
                 match IndexAlteração:
                     case 1:
@@ -136,12 +139,13 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 mudarPreco = str(input(f"Confirmar Mudança do Preço do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N] ")).upper()
                                 if mudarPreco in ["S","N"]:
                                     break
+
+
                             if mudarPreco == "S":
                                 alterarPreco()
                         except Exception as errorPreco:
-                            print("Erro na Alteração de Preço")
-                            print(errorPreco.__class__)
-                            print(errorPreco)
+                            print("Erro na alteração do preço")
+                            traceback.print_exc()
 
                     case 3:
                         try:
@@ -248,9 +252,10 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     count = 0
                     while count < len(clientes_E_estoques):
-                        arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}\n")
+                        arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}\n")
                         count += 1
                 except:
                     print("Erro ao Adicionar os novos dados")
     finally:
         a.close()
+        arqEstoque.close()
