@@ -1,6 +1,7 @@
 from itertools import count
 from os import error
 from sys import exception
+from time import process_time_ns
 from uuid import uuid4
 
 
@@ -60,10 +61,14 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
         except:
             print("Erro na criação da lista")
         else:
-            for produto in clientes_E_estoques:
-                if IDproduto in produto:
-                    index_Produto_Que_Sera_Alterado = clientes_E_estoques.index(produto)
-                    
+            count_Loop_Produtos_In_clientes = 0
+            index_Produto_Que_Sera_Alterado = 0
+            while count_Loop_Produtos_In_clientes < len(clientes_E_estoques):
+                if IDproduto == clientes_E_estoques[count_Loop_Produtos_In_clientes][0]:
+                    index_Produto_Que_Sera_Alterado = clientes_E_estoques[count_Loop_Produtos_In_clientes]
+                count_Loop_Produtos_In_clientes += 1
+
+
             try:
                 match IndexAlteração:
                     case 1:
