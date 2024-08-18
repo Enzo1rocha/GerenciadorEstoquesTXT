@@ -3,7 +3,8 @@ from os import error
 from sys import exception
 from time import process_time_ns
 from uuid import uuid4
-
+from modulos import *
+from modulos.entradaDeDados import float_input, int_input
 
 def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
@@ -96,7 +97,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                     case 2:
                         try:
                             def alterarPreco():
-                                    novoPreco = str(f"{float(input("Novo Preço: ")):.2f}")
+                                    novoPreco = f'{float_input("Novo Preço: R$", True):.2f}'
 
                                     velhoPreco = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                                     print(f"Velho Preço: {velhoPreco}")
@@ -118,7 +119,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                     case 3:
                         try:
                             def alterarEstoque():
-                                    novoEstoque = str(f"{int(input("Nova Quantidade Do Estoque: "))}")
+                                    novoEstoque = f'{int_input("Novo Estoque: ", True)}'
 
                                     velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                                     print(f"Velho Estoque: {velhoEstoque}")

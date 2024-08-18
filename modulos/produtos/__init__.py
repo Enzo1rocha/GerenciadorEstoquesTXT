@@ -1,3 +1,5 @@
+from modulos import entradaDeDados
+
 def adicionarProdutoNoArquivo(arquivo=".txt", nomedoproduto="Desconhecido", precodoproduto=0,quantidadedoproduto=0):
     try:
         a = open(arquivo, 'r+')
@@ -23,8 +25,8 @@ def adicionar_Manualmente_Produtos_em_Lista(arquivoTXT=".txt"):
         lista_estoque = []
         while True:
             nome = str(input("Digite o Nome do Produto: ")).capitalize()
-            preco = str(float(input("Preço do Produto: R$")))
-            estoque = str(int(input("Quantidade Disponivel: ")))
+            preco = str(entradaDeDados.float_input("Preço do Produto: R$"))
+            estoque = str(entradaDeDados.int_input("Quantidade Disponivel: "))
             if nome in lista_nomes:
                 print("Este Produto ja possui um estoque")
                 continue
