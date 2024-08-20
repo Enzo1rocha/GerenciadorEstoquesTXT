@@ -9,4 +9,5 @@ for i in arquivos:
     arquivo.arqExiste(i)
 
 limparTerminal()
-estoque.alterar_Dados_Produtos('estoque.txt', '4abf34c1-dd65-45c6-af3e-997ca67b6960', 2)
+estoque.alterar_Dados_Produtos(arquivos[1], "71f3a87b-7492-4e35-b55f-64b00a8586f5", 7)
+estoque.alterar_Dados_Produtos(arquivos[1], "71f3a87b-7492-4e35-b55f-64b00a8586f5", 8)
