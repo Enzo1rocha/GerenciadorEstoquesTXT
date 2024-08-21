@@ -7,6 +7,16 @@ from modulos.entradaDeDados import float_input, int_input
 from modulos.proInterface import limparTerminal
 from time import sleep
 
+def avisosEstoque(quantidadeMinimaParaAviso=1000, quantidadeEstoqueCheio=10000, ValorEstoqueAtual=0):
+    if ValorEstoqueAtual < quantidadeMinimaParaAviso:
+        return "REABASTECER"
+    elif ValorEstoqueAtual >= quantidadeEstoqueCheio:
+        return "LIMITE DE ESTOQUE"
+    else:
+        return "NENHUM AVISO"
+
+
+
 def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
         a = open(arquivoComNomes, 'rt')
@@ -44,6 +54,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
                         while True:
                             unidade_de_medida = input("Unidade de medida: ")
                             sigla_unidade_medida = input(f"Sigla da unidade de medida {unidade_de_medida}: ")
+                            print(f"ESTOQUE TOTAL = {lista_produtos[i][2]}")
                             quantidade_Disponivel = str(int_input(f"Quantidade disponivel do produto {lista_produtos[i][0]}: "))
                             quantidade_Armazenada = str(int_input(f"Quantidade Armazenada do produto {lista_produtos[i][0]}: "))
                             quantidade_Comprometida = str(int_input(f"Quantidade Comprometida do Produto {lista_produtos[i][0]}: "))
@@ -52,7 +63,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
 
                                 
 
-                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}\n')
+                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}:{avisosEstoque(quantidadeMinimaParaAviso=1000, quantidadeEstoqueCheio=10000, ValorEstoqueAtual=int(lista_produtos[i][2]))}\n')
 
                                 print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
 
@@ -85,7 +96,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 for linha in a:
                     if ":" in linha:
                         dados = linha.split(":")
-                        dados[8] = dados[8].replace('\n','')
+                        dados[9] = dados[9].replace('\n','')
                         clientes_E_estoques.append(dados)
                     else:
                         print("Não Foi Encontrado :")
@@ -100,19 +111,89 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 if IDproduto == clientes_E_estoques[county][0]:
                     index_Produto_Que_Sera_Alterado = county
                 county += 1
+
+            def alterarNome():
+                novoNome = str(input("Novo Nome: ")).capitalize()
+
+                velhoNome = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho nome: {velhoNome}")
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoNome
+
+
+            def alterarPreco():
+                novoPreco = f'{float_input("Novo Preço: R$", True):.2f}'
+
+                velhoPreco = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho Preço: {velhoPreco}")
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoPreco
+
+            
+            def alterarEstoque():
+                novoEstoque = f'{int_input("Novo Estoque: ", True)}'
+                velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho Estoque: {velhoEstoque}")
+
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoque
+
+
+            def alterarEstoqueDisponivel():
+                novoEstoqueDisponivel = f'{int_input("Novo Estoque Disponivel: ", True)}'
+
+                velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho Estoque Dispnivel: {velhoEstoque}")
+
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueDisponivel
+
+
+            def alterarEstoqueArmazenada():
+                novoEstoqueArmazenado = f'{int_input("Novo Estoque Armazenado: ", True)}'
+
+                velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho Estoque Armazenado: {velhoEstoque}")
+
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueArmazenado
+
+            
+            def alterarEstoqueComprometido():
+                novoEstoqueComprometido = f'{int_input("Novo Estoque Comprometido: ", True)}'
+
+                velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Velho Estoque Comprometido: {velhoEstoque}")
+
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueComprometido
+
+
+            def alterarUnidadeDeMedida():
+                                    
+                velhoUnidadeDeMedida = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Unidade de Medida Atual: {velhoUnidadeDeMedida}")
+
+
+                novoUnidadeDeMedida = input("Nova Unidade de Medida: ")
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoUnidadeDeMedida
+
+            
+            def alterarSiglaDeMedida():
+                                    
+                velhoSiglaDeMedida = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
+                print(f"Unidade de Medida Atual: {velhoSiglaDeMedida}")
+
+
+                novoSiglaDeMedida = input("Nova Unidade de Medida: ")
+
+                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoSiglaDeMedida
+
             try:
                 match IndexAlteração:
                     case 1:
                         try:
-                            def alterarNome():
-                                novoNome = str(input("Novo Nome: ")).capitalize()
-
-                                velhoNome = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                print(f"Velho nome: {velhoNome}")
-
-                                clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoNome
-
-
                             while True:
                                 mudarNome = str(input(f"Confirmar Mudança do Nome do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]}? [S/N] ")).upper()
                                 if mudarNome in ["S","N"]:
@@ -126,21 +207,10 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 2:
                         try:
-                            def alterarPreco():
-                                    novoPreco = f'{float_input("Novo Preço: R$", True):.2f}'
-
-                                    velhoPreco = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Velho Preço: {velhoPreco}")
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoPreco
-
-
                             while True:
                                 mudarPreco = str(input(f"Confirmar Mudança do Preço do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N] ")).upper()
                                 if mudarPreco in ["S","N"]:
                                     break
-
-
                             if mudarPreco == "S":
                                 alterarPreco()
                         except Exception as errorPreco:
@@ -149,16 +219,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 3:
                         try:
-                            def alterarEstoque():
-                                    novoEstoque = f'{int_input("Novo Estoque: ", True)}'
-
-                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Velho Estoque: {velhoEstoque}")
-
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoque
-
-
                             while True:
                                 mudarEstoque = str(input(f"Confirmar Mudança do Estoque do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]}?  [S/N] ")).upper()
                                 if mudarEstoque in ["S","N"]:
@@ -172,16 +232,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 4:
                         try:
-                            def alterarEstoqueDisponivel():
-                                    novoEstoqueDisponivel = f'{int_input("Novo Estoque Disponivel: ", True)}'
-
-                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Velho Estoque Dispnivel: {velhoEstoque}")
-
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueDisponivel
-
-
                             while True:
                                 mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Disponivel do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
                                 if mudarEstoqueDisponivel in ["S","N"]:
@@ -195,16 +245,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 5:
                         try:
-                            def alterarEstoqueArmazenada():
-                                    novoEstoqueArmazenado = f'{int_input("Novo Estoque Armazenado: ", True)}'
-
-                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Velho Estoque Armazenado: {velhoEstoque}")
-
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueArmazenado
-
-
                             while True:
                                 mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Armazenado do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
                                 if mudarEstoqueDisponivel in ["S","N"]:
@@ -218,16 +258,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 6:
                         try:
-                            def alterarEstoqueComprometido():
-                                    novoEstoqueComprometido = f'{int_input("Novo Estoque Comprometido: ", True)}'
-
-                                    velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Velho Estoque Comprometido: {velhoEstoque}")
-
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueComprometido
-
-
                             while True:
                                 mudarEstoqueDisponivel = str(input(f"Confirmar Mudança do Estoque Armazenado do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
                                 if mudarEstoqueDisponivel in ["S","N"]:
@@ -241,17 +271,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 7:
                         try:
-                            def alterarUnidadeDeMedida():
-                                    
-                                    velhoUnidadeDeMedida = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Unidade de Medida Atual: {velhoUnidadeDeMedida}")
-
-
-                                    novoUnidadeDeMedida = input("Nova Unidade de Medida: ")
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoUnidadeDeMedida
-
-
                             while True:
                                 mudarUnidadeDeMedida = str(input(f"Confirmar Mudança da unidade de medida do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
                                 if mudarUnidadeDeMedida in ["S","N"]:
@@ -265,17 +284,6 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     case 8:
                         try:
-                            def alterarSiglaDeMedida():
-                                    
-                                    velhoSiglaDeMedida = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
-                                    print(f"Unidade de Medida Atual: {velhoSiglaDeMedida}")
-
-
-                                    novoSiglaDeMedida = input("Nova Unidade de Medida: ")
-
-                                    clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoSiglaDeMedida
-
-
                             while True:
                                 mudarSiglaDeMedida = str(input(f"Confirmar Mudança da Sigla de medida do Produto {clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]}? [S/N]")).upper()
                                 if mudarSiglaDeMedida in ["S","N"]:
@@ -302,7 +310,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                     count = 0
                     while count < len(clientes_E_estoques):
-                        arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}:{clientes_E_estoques[count][7]}:{clientes_E_estoques[count][8]}\n")
+                        arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}:{clientes_E_estoques[count][7]}:{clientes_E_estoques[count][8]}:{clientes_E_estoques[count][9]}\n")
                         count += 1
                 except:
                     print("Erro ao Adicionar os novos dados")
