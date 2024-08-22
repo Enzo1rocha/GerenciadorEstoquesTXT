@@ -4,6 +4,7 @@ from uuid import uuid4
 from modulos import *
 from modulos import proInterface
 from modulos.entradaDeDados import float_input, int_input
+from modulos.logsestoque import addProdutos
 from modulos.proInterface import limparTerminal
 from time import sleep
 
@@ -52,6 +53,8 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
                     if lista_produtos[i][0] not in lista_Nomes_Estoque:
                         print(f"====== CONFIGURAÇÃO DO ESTOQUE DO PRODUTO {lista_produtos[i][0]} ======")
                         while True:
+                            minimo_aviso = int_input("Limite de estoque para aviso para reabastecimento: ")
+                            maximo_aviso = int_input("Limite para aviso de estoque cheio")
                             unidade_de_medida = input("Unidade de medida: ")
                             sigla_unidade_medida = input(f"Sigla da unidade de medida {unidade_de_medida}: ")
                             print(f"ESTOQUE TOTAL = {lista_produtos[i][2]}")
@@ -63,7 +66,9 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
 
                                 
 
-                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}:{avisosEstoque(quantidadeMinimaParaAviso=1000, quantidadeEstoqueCheio=10000, ValorEstoqueAtual=int(lista_produtos[i][2]))}\n')
+                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}:{avisosEstoque(quantidadeMinimaParaAviso=minimo_aviso, quantidadeEstoqueCheio=maximo_aviso, ValorEstoqueAtual=int(lista_produtos[i][2]))}\n')
+
+                                addProdutos(lista_produtos[i][0], lista_produtos[i][1], lista_produtos[i][2])
 
                                 print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
 
