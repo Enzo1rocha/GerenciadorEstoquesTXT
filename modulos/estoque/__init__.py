@@ -1,10 +1,9 @@
-from re import T
+
 import traceback
 from uuid import uuid4
 from modulos import *
-from modulos import proInterface
 from modulos.entradaDeDados import float_input, int_input
-from modulos.logsestoque import addProdutos
+from modulos.logsestoque import AddLog
 from modulos.proInterface import limparTerminal
 from time import sleep
 
@@ -64,11 +63,13 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
 
                             if int(quantidade_Disponivel) <= int(lista_produtos[i][2]) and int(quantidade_Armazenada) <= int(lista_produtos[i][2]) and int(quantidade_Comprometida) <= int(lista_produtos[i][2]):
 
-                                
+                                codigo_produto = str(uuid4())
 
-                                arq.write(f'{str(uuid4())}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}:{avisosEstoque(quantidadeMinimaParaAviso=minimo_aviso, quantidadeEstoqueCheio=maximo_aviso, ValorEstoqueAtual=int(lista_produtos[i][2]))}\n')
+                                arq.write(f'{codigo_produto}:{lista_produtos[i][0]}:{float(lista_produtos[i][1]):.2f}:{lista_produtos[i][2]}:{int(quantidade_Disponivel)}:{int(quantidade_Armazenada)}:{int(quantidade_Comprometida)}:{unidade_de_medida}:{sigla_unidade_medida}:{avisosEstoque(quantidadeMinimaParaAviso=minimo_aviso, quantidadeEstoqueCheio=maximo_aviso, ValorEstoqueAtual=int(lista_produtos[i][2]))}\n')
 
-                                addProdutos(lista_produtos[i][0], lista_produtos[i][1], lista_produtos[i][2])
+                                AddLog(CodigoProduto=codigo_produto, productName=(str(lista_produtos[i][0])), productPreço=float(lista_produtos[i][1]), productEstoqueTotal=int(lista_produtos[i][2]), ProdutoQuantidadeDisponivel=int(quantidade_Disponivel), ProdutoQuantidadeArmazenada=int(quantidade_Armazenada), ProdutoQuantidadeComprometida=int(quantidade_Comprometida), UnidadeDeMedida=str(unidade_de_medida), SiglaUnidadeDeMedida=str(sigla_unidade_medida), AvisoDeEstoqueAtual=avisosEstoque(minimo_aviso, maximo_aviso, int(lista_produtos[i][2])), Motivo="N/A", TipoDeEvento='Adição de Produtos', OqueFoiAlterado='N/A')
+
+                                """AddLog(str(codigo_produto), str(lista_produtos[i][0]), float(lista_produtos[i][1]), int(lista_produtos[i][2]), int(quantidade_Disponivel), int(quantidade_Armazenada), int(quantidade_Comprometida), str(unidade_de_medida), str(sigla_unidade_medida), str(avisosEstoque(minimo_aviso, maximo_aviso, lista_produtos[i][2])))"""
 
                                 print(F"Estoque de {lista_produtos[i][0]}\nPreço unidade: R${float(lista_produtos[i][1]):.2f}\nQuantidade: {lista_produtos[i][2]}\nFOI ADICIONADO COM SUCESSO")
 
@@ -116,12 +117,19 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 if IDproduto == clientes_E_estoques[county][0]:
                     index_Produto_Que_Sera_Alterado = county
                 county += 1
+            
+
+            FoiAlterado = f''
 
             def alterarNome():
                 novoNome = str(input("Novo Nome: ")).capitalize()
 
                 velhoNome = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                 print(f"Velho nome: {velhoNome}")
+
+                alteração = f'Nome: Antigo = {velhoNome}, Novo = {novoNome}'
+
+                FoiAlterado = f'{alteração}'
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoNome
 
@@ -132,6 +140,10 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 velhoPreco = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                 print(f"Velho Preço: {velhoPreco}")
 
+                alteração = f'Preço: Antigo = {velhoPreco}, Novo = {novoPreco}'
+
+                FoiAlterado = f'{alteração}'
+
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoPreco
 
             
@@ -139,6 +151,10 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 novoEstoque = f'{int_input("Novo Estoque: ", True)}'
                 velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                 print(f"Velho Estoque: {velhoEstoque}")
+
+                alteração = f'Estoque Total: Antigo = {velhoEstoque}, Novo = {novoEstoque}'
+
+                FoiAlterado = f'{alteração}'
 
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoque
@@ -151,6 +167,11 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 print(f"Velho Estoque Dispnivel: {velhoEstoque}")
 
 
+                alteração = f'Estoque Disponivel: Antigo = {velhoEstoque}, Novo = {novoEstoqueDisponivel}'
+
+                FoiAlterado = f'{alteração}'
+
+
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueDisponivel
 
 
@@ -161,6 +182,11 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 print(f"Velho Estoque Armazenado: {velhoEstoque}")
 
 
+                alteração = f'Estoque Armazenado: Antigo = {velhoEstoque}, Novo = {novoEstoqueArmazenado}'
+
+                FoiAlterado = f'{alteração}'
+
+
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueArmazenado
 
             
@@ -169,6 +195,11 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 velhoEstoque = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                 print(f"Velho Estoque Comprometido: {velhoEstoque}")
+
+
+                alteração = f'Estoque Comprometido: Antigo = {velhoEstoque}, Novo = {novoEstoqueComprometido}'
+
+                FoiAlterado = f'{alteração}'
 
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueComprometido
@@ -182,6 +213,12 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 novoUnidadeDeMedida = input("Nova Unidade de Medida: ")
 
+
+
+                alteração = f'Unidade de Medida: Antiga = {velhoUnidadeDeMedida}, Nova = {novoUnidadeDeMedida}'
+
+                FoiAlterado = f'{alteração}'
+
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoUnidadeDeMedida
 
             
@@ -190,10 +227,14 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 velhoSiglaDeMedida = clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração]
                 print(f"Unidade de Medida Atual: {velhoSiglaDeMedida}")
 
-
                 novoSiglaDeMedida = input("Nova Unidade de Medida: ")
 
+                alteração = f'Sigla de Medida: Antiga = {velhoSiglaDeMedida}, Nova = {novoSiglaDeMedida}'
+
+                FoiAlterado = f'{alteração}'
+
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoSiglaDeMedida
+            
 
             try:
                 match IndexAlteração:
@@ -204,6 +245,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarNome in ["S","N"]:
                                     break
                             if mudarNome == "S":
+                                Motivo_Alteração = input("Motivo da Alteração")
                                 alterarNome()
                         except Exception as errorNome:
                             print("Erro na alteração nome")
@@ -317,6 +359,9 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                     while count < len(clientes_E_estoques):
                         arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}:{clientes_E_estoques[count][7]}:{clientes_E_estoques[count][8]}:{clientes_E_estoques[count][9]}\n")
                         count += 1
+                    AddLog(clientes_E_estoques[index_Produto_Que_Sera_Alterado][0], clientes_E_estoques[index_Produto_Que_Sera_Alterado][1],clientes_E_estoques[index_Produto_Que_Sera_Alterado][2], clientes_E_estoques[index_Produto_Que_Sera_Alterado][3], clientes_E_estoques[index_Produto_Que_Sera_Alterado][4],clientes_E_estoques[index_Produto_Que_Sera_Alterado][5],clientes_E_estoques[index_Produto_Que_Sera_Alterado][6],clientes_E_estoques[index_Produto_Que_Sera_Alterado][7],clientes_E_estoques[index_Produto_Que_Sera_Alterado][8],clientes_E_estoques[index_Produto_Que_Sera_Alterado][9],
+                    Motivo_Alteração,
+                    "Alteração De Dados",FoiAlterado)
                 except:
                     print("Erro ao Adicionar os novos dados")
     finally:

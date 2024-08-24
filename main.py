@@ -4,7 +4,7 @@ from operator import truediv
 from modulos import arquivo
 from modulos import produtos
 from modulos import estoque
-from modulos.logsestoque import addProdutos
+from modulos.logsestoque import AddLog
 from modulos.proInterface import limparTerminal, menuPrincipal
 
 arquivos = ["produtos.txt", "estoque.txt", "logs.txt"]
