@@ -1,4 +1,6 @@
 
+from http import client
+from json.encoder import INFINITY
 import traceback
 from uuid import uuid4
 from modulos import *
@@ -19,8 +21,8 @@ def avisosEstoque(quantidadeMinimaParaAviso=1000, quantidadeEstoqueCheio=10000, 
 
 def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
     try:
-        a = open(arquivoComNomes, 'rt')
-        b = open(arquivoEndereço, 'r+')
+        a = open(arquivoComNomes, 'rt', encoding="utf-8")
+        b = open(arquivoEndereço, 'r+', encoding="utf-8")
     except:
         print("Erro ao ler os arquivos")
     else:
@@ -42,7 +44,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
         else:
             print(f"{arquivoEndereço} esta vazio")
         try:
-            arq = open(arquivoEndereço, 'at')
+            arq = open(arquivoEndereço, 'at', encoding="utf-8")
         except:
             print("Ocorreu Algum Erro")
         else:
@@ -92,7 +94,7 @@ def adicionar_Produtos_Estoque(arquivoComNomes=".txt", arquivoEndereço='.txt'):
 
 def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração=1):
     try:
-        a = open(arquivoEstoque, 'r+')
+        a = open(arquivoEstoque, 'r+', encoding="utf-8")
     except:
         print('Erro na abertura do arquivo')
     else:
@@ -133,6 +135,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoNome
 
+                return FoiAlterado
+
 
             def alterarPreco():
                 novoPreco = f'{float_input("Novo Preço: R$", True):.2f}'
@@ -146,6 +150,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoPreco
 
+                return FoiAlterado
+
             
             def alterarEstoque():
                 novoEstoque = f'{int_input("Novo Estoque: ", True)}'
@@ -158,6 +164,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoque
+
+                return FoiAlterado
 
 
             def alterarEstoqueDisponivel():
@@ -174,6 +182,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueDisponivel
 
+                return FoiAlterado
+
 
             def alterarEstoqueArmazenada():
                 novoEstoqueArmazenado = f'{int_input("Novo Estoque Armazenado: ", True)}'
@@ -189,6 +199,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueArmazenado
 
+                return FoiAlterado
+
             
             def alterarEstoqueComprometido():
                 novoEstoqueComprometido = f'{int_input("Novo Estoque Comprometido: ", True)}'
@@ -203,6 +215,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoEstoqueComprometido
+                
+                return FoiAlterado
 
 
             def alterarUnidadeDeMedida():
@@ -221,6 +235,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoUnidadeDeMedida
 
+                return FoiAlterado
+
             
             def alterarSiglaDeMedida():
                                     
@@ -234,6 +250,8 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                 FoiAlterado = f'{alteração}'
 
                 clientes_E_estoques[index_Produto_Que_Sera_Alterado][IndexAlteração] = novoSiglaDeMedida
+
+                return FoiAlterado
             
 
             try:
@@ -246,7 +264,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                     break
                             if mudarNome == "S":
                                 Motivo_Alteração = input("Motivo da Alteração")
-                                alterarNome()
+                                FoiAlterado += alterarNome()
                         except Exception as errorNome:
                             print("Erro na alteração nome")
                             print(errorNome.__class__)
@@ -259,7 +277,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarPreco in ["S","N"]:
                                     break
                             if mudarPreco == "S":
-                                alterarPreco()
+                                FoiAlterado += alterarPreco()
                         except Exception as errorPreco:
                             print("Erro na alteração do preço")
                             traceback.print_exc()
@@ -271,7 +289,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarEstoque in ["S","N"]:
                                     break
                             if mudarEstoque == "S":
-                                alterarEstoque()
+                                FoiAlterado += alterarEstoque()
                         except Exception as errorEstoque:
                             print("Erro Na Alteração de Estoque")
                             print(errorEstoque.__class__)
@@ -284,7 +302,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarEstoqueDisponivel in ["S","N"]:
                                     break
                             if mudarEstoqueDisponivel == "S":
-                                alterarEstoqueDisponivel()
+                                FoiAlterado += alterarEstoqueDisponivel()
                         except Exception as errorEstoque:
                             print("Erro Na Alteração de Estoque")
                             print(errorEstoque.__class__)
@@ -297,7 +315,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarEstoqueDisponivel in ["S","N"]:
                                     break
                             if mudarEstoqueDisponivel == "S":
-                                alterarEstoqueArmazenada()
+                                FoiAlterado += alterarEstoqueArmazenada()
                         except Exception as errorEstoque:
                             print("Erro Na Alteração de Estoque")
                             print(errorEstoque.__class__)
@@ -310,7 +328,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarEstoqueDisponivel in ["S","N"]:
                                     break
                             if mudarEstoqueDisponivel == "S":
-                                alterarEstoqueComprometido()
+                                FoiAlterado += alterarEstoqueComprometido()
                         except Exception as errorEstoque:
                             print("Erro Na Alteração de Estoque")
                             print(errorEstoque.__class__)
@@ -323,7 +341,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarUnidadeDeMedida in ["S","N"]:
                                     break
                             if mudarUnidadeDeMedida == "S":
-                                alterarUnidadeDeMedida()
+                                FoiAlterado += alterarUnidadeDeMedida()
                         except Exception as errorUnidadeDeMedida:
                             print("Erro Na Alteração da Unidade de Medida")
                             print(errorUnidadeDeMedida.__class__)
@@ -336,7 +354,7 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
                                 if mudarSiglaDeMedida in ["S","N"]:
                                     break
                             if mudarSiglaDeMedida == "S":
-                                alterarSiglaDeMedida()
+                                FoiAlterado += alterarSiglaDeMedida()
                         except Exception as errorSiglaDeMedida:
                             print("Erro Na Alteração da Unidade de Medida")
                             print(errorSiglaDeMedida.__class__)
@@ -351,17 +369,20 @@ def alterar_Dados_Produtos(arquivoEstoque='.txt', IDproduto="", IndexAlteração
             else:
                 try:
                     try:
-                        arqEstoque = open(arquivoEstoque, 'w')
+                        arqEstoque = open(arquivoEstoque, 'w', encoding="utf-8")
                     except:
                         print("Impossivel Abrir o arqEstoque")
+                    else:
+                        count = 0
+                        while count < len(clientes_E_estoques):
+                            arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}:{clientes_E_estoques[count][7]}:{clientes_E_estoques[count][8]}:{clientes_E_estoques[count][9]}\n")
+                            count += 1
+                        AddLog(CodigoProduto=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][0]), productName=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]), productPreço=19.99,productEstoqueTotal=100, ProdutoQuantidadeDisponivel=50, ProdutoQuantidadeArmazenada=30,ProdutoQuantidadeComprometida=20, UnidadeDeMedida='Unidade', SiglaUnidadeDeMedida='UN',AvisoDeEstoqueAtual='Baixo', Motivo=Motivo_Alteração, TipoDeEvento='Alteração de Dados',OqueFoiAlterado=FoiAlterado)
 
-                    count = 0
-                    while count < len(clientes_E_estoques):
-                        arqEstoque.write(f"{clientes_E_estoques[count][0]}:{clientes_E_estoques[count][1]}:{clientes_E_estoques[count][2]}:{clientes_E_estoques[count][3]}:{clientes_E_estoques[count][4]}:{clientes_E_estoques[count][5]}:{clientes_E_estoques[count][6]}:{clientes_E_estoques[count][7]}:{clientes_E_estoques[count][8]}:{clientes_E_estoques[count][9]}\n")
-                        count += 1
-                    AddLog(clientes_E_estoques[index_Produto_Que_Sera_Alterado][0], clientes_E_estoques[index_Produto_Que_Sera_Alterado][1],clientes_E_estoques[index_Produto_Que_Sera_Alterado][2], clientes_E_estoques[index_Produto_Que_Sera_Alterado][3], clientes_E_estoques[index_Produto_Que_Sera_Alterado][4],clientes_E_estoques[index_Produto_Que_Sera_Alterado][5],clientes_E_estoques[index_Produto_Que_Sera_Alterado][6],clientes_E_estoques[index_Produto_Que_Sera_Alterado][7],clientes_E_estoques[index_Produto_Que_Sera_Alterado][8],clientes_E_estoques[index_Produto_Que_Sera_Alterado][9],
-                    Motivo_Alteração,
-                    "Alteração De Dados",FoiAlterado)
+                        
+
+                        """AddLog(CodigoProduto=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][0]), productName=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][1]), productEstoqueTotal=int(clientes_E_estoques[index_Produto_Que_Sera_Alterado][2]), ProdutoQuantidadeDisponivel=int(clientes_E_estoques[index_Produto_Que_Sera_Alterado][3]), ProdutoQuantidadeArmazenada=int(clientes_E_estoques[index_Produto_Que_Sera_Alterado][4]), ProdutoQuantidadeComprometida=int(clientes_E_estoques[index_Produto_Que_Sera_Alterado][5]), UnidadeDeMedida=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][6]), SiglaUnidadeDeMedida=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][7]), AvisoDeEstoqueAtual=str(clientes_E_estoques[index_Produto_Que_Sera_Alterado][9]), Motivo=str(Motivo_Alteração), TipoDeEvento="Alteração de Dados", OqueFoiAlterado=FoiAlterado)"""
+            
                 except:
                     print("Erro ao Adicionar os novos dados")
     finally:

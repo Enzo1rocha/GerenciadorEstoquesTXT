@@ -19,8 +19,9 @@ def cabeçalho(principal, linha='=', tamanho = 40):
     print(linha*tamanho)
 
 
-def menuPrincipal(lista):
-    cabeçalho('MENU PRINCIPAL', '=', 40)
+def menuPrincipal(tituloPrincipal='',lista=[]):
+    limparTerminal()
+    cabeçalho(tituloPrincipal, '=', 40)
     c = 1
     inicio = c
     for item in lista:
@@ -39,3 +40,42 @@ def menuPrincipal(lista):
             print('Entrada Invalida')
         except KeyboardInterrupt:
             print('Entrada Inválida')
+
+        
+def produtosID():
+    try:
+        estoqueTXT = open("estoque.txt", 'r')
+    except Exception as e:
+        print("Erro ao abrir arquivo", e)
+    else:
+        osIds = []
+        Nomes = []
+        for linhatxt in estoqueTXT:
+            dados = linhatxt.split(':')
+            osIds.append(str(dados[0]))
+            Nomes.append(str(dados[1]))
+        Nomes.append("Voltar")
+        opção = menuPrincipal('Produtos', Nomes)
+        for i in range(1,len(Nomes)+1):
+            if i == opção:
+                idDeAlteração = str(osIds[i-1])
+        
+        return idDeAlteração
+    
+
+def opAlteraçãoDados():
+
+    alterações = ["Nome","Preço","Estoque Total", "Estoque Disponivel", "Estoque Armazenado", "Estoque Comprometido", "Unidade de Medida", "Sigla de Medida", "Voltar"]
+    opção = menuPrincipal('Opções', alterações)
+    c=0
+    while c < 8:
+        if c == (opção-1):
+            retorno = opção
+        else:
+            retorno = None
+        c += 1
+
+    return retorno
+
+
+            

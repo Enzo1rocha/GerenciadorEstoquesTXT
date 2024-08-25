@@ -4,7 +4,7 @@ from modulos.proInterface import limparTerminal
 
 def adicionarProdutoNoArquivo(arquivo=".txt", nomedoproduto="Desconhecido", precodoproduto=0,quantidadedoproduto=0):
     try:
-        a = open(arquivo, 'r+')
+        a = open(arquivo, 'r+', encoding="utf-8")
     except:
         print("Ocorreu Algum Erro!!!")
     else:
